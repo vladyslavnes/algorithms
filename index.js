@@ -6,7 +6,8 @@ const isPrime = num => {
     return num > 1
 }
 
-const factorial = (num) => {
+const factorial = num => {
+	// Factorial of n is the multiplication of all natural digits up to n, including n
 	let factorial = 1
 		for (let i = 1; i < num + 1; i++) {
 			factorial *= i
@@ -14,10 +15,18 @@ const factorial = (num) => {
 	return factorial
 }
 
-// Binet's formula - [phi^n/sqrt(5)]
-const fib = num => num >= 0 ? Math.round((((1+Math.sqrt(5))/2)**num)/Math.sqrt(5)) : undefined
+// Binet's formula - integer closest to phi^n/sqrt(5)
+const fib = num => {
+	let phi = (1+Math.sqrt(5))/2 // Golden ratio
+	if (num >= 0) {
+		return Math.round((phi**num)/Math.sqrt(5))
+	} else {
+		return undefined
+	}
+}
 
 const reverse = str => {
+	// go through a string from end to start and fill in new string that direction
 	let newString = []
 	for (let i = str.length - 1; i >= 0; i--) {
 		newString[str.length - i] = str[i]
@@ -26,37 +35,60 @@ const reverse = str => {
 }
 
 const isPalindrome = str => {
+	// check whether a string without spaces and in lowercase is equal to itself reversed
 	const monoString = raw => raw.toLowerCase().replace(/\s/g,'')
 	return monoString(str) === monoString(reverse(str))
 }
 
 const missing = arr => {
-	if (arr.length === 0) return undefined
-	let missing = (Math.max(...arr) * (Math.max(...arr) + 1) / 2) - arr.reduce((a, b) => a + b)
-	return missing === 0 ? undefined : missing
+	if (arr.length === 0) {
+		return undefined
+	}
+	const sum = arr.reduce((a, b) => a + b)
+	const last = Math.max(...arr)
+	const intSeries = last * (last + 1) / 2 // integer series from 1 to n - n*(n+1)/2
+	const missing = intSeries - sum // substract the actual sum from expected
+	if (!missing) { // if they're equal
+		return undefined
+	}
+	return missing
 }
 
 const indexOf = (arr, num) => {
 	for (let i = 0; i < arr.length; i++) {
-		if (arr[i] === num) return i
+		if (arr[i] === num) {
+			return i
+		}
 	}
 	return -1
 }
 
 const isBalanced = str => {
 	let braces = []
+
 	for (let i in str) {
-		if (str[i] === '{') braces++
-		if (str[i] === '}') braces--
-		if (braces === -1) return false
+		// check whether there is equal amount opening and closing
+		if (str[i] === '{') {
+			braces++
+		}
+		if (str[i] === '}') {
+			braces--
+		}
+		if (braces === -1) {
+			return false
+		}
 	}
 
-	return ((str.match(/{/g).length === str.match(/}/g).length) && !str.match('{}'))
+	let amountBalance = (str.match(/{/g).length === str.match(/}/g).length)
+	let noEmptyBraces = !str.match('{}')
+	return amountBalance && noEmptyBraces
 }
 
 const isSorted = arr => {
 	for (let i = 0; i < arr.length; i++) {
-		if (arr[i] > arr[i+1]) return false
+		if (arr[i] > arr[i+1]) {
+			return false
+		}
 	}
 	return true
 }
@@ -64,6 +96,7 @@ const isSorted = arr => {
 // Tests
 
 const literals = val => {
+	// pretty-print values for console output
 	if (val === undefined) return 'undefined'
 	if (typeof val === 'string') return `'${val}'`
 	if (val.slice) return `[${val}]`
